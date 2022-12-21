@@ -113,9 +113,9 @@ runs:
         set -x
         echo "Debug echo"
         cat reliza_command
-        grep '--status complete' reliza_command
-        grep '--status complete' reliza_command | wc -l
-        status_complete_check=$(grep '--status complete' reliza_command | wc -l)
+        cat reliza_command | grep 'status complete' 
+        cat reliza_command | grep 'status complete' | wc -l
+        status_complete_check=$(cat reliza_command | grep 'status complete' | wc -l)
         echo "statusCheck: $status_complete_check"
         if [[ "$status_complete_check" != "1" ]]
         then
