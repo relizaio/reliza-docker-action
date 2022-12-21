@@ -113,6 +113,7 @@ runs:
         set -x
         set -e
         echo "Debug echo"
+        cat reliza_command
         grep 'status rejected' reliza_command
         grep 'status rejected' reliza_command | wc -l
         status_rejected_check=$(grep 'status rejected' reliza_command | wc -l)
