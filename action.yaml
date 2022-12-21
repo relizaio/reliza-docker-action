@@ -111,7 +111,6 @@ runs:
       shell: bash
       run: |
         set -x
-        set -e
         echo "Debug echo"
         cat reliza_command
         grep 'status rejected' reliza_command
