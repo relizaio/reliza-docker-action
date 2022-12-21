@@ -110,13 +110,7 @@ runs:
     - name: Fail build if reliza status is rejected
       shell: bash
       run: |
-        set -x
-        echo "Debug echo"
-        cat reliza_command
-        cat reliza_command | grep 'status complete' 
-        cat reliza_command | grep 'status complete' | wc -l
         status_complete_check=$(cat reliza_command | grep 'status complete' | wc -l)
-        echo "statusCheck: $status_complete_check"
         if [[ "$status_complete_check" != "1" ]]
         then
           echo "Failing build since Reliza build Status is rejected"
