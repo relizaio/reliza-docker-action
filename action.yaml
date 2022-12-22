@@ -12,7 +12,7 @@ inputs:
     required: true
   registry_host:
     description: "Host for image registry"
-    required: true
+    required: false
   image_namespace:
     description: "Namespace of the image on registry"
     required: true
