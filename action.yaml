@@ -49,7 +49,12 @@ runs:
     - name: Get Version
       shell: bash
       run: |
-        meta=$(${{inputs.ci_metadata}} || GitHub)
+        if [ -z "${{inputs.ci_metadata}}" ]
+        then
+          meta="GitHub"
+        else
+          meta=${{inputs.ci_metadata}}
+        fi
         reliza_ver=$(docker run --rm relizaio/reliza-cli getversion -k ${{ inputs.reliza_api_key }} -i ${{ inputs.reliza_api_id }} -u ${{ inputs.reliza_api_url }} -b ${{github.ref_name}} --metadata $meta)
         echo "completed getting ver"
         echo $reliza_ver
