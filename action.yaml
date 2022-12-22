@@ -1,5 +1,5 @@
-name: 'RelizaHub Sumbit Build And Submit Release metadata action'
-description: 'RelizaHub Sumbit Build And Submit Release metadata action'
+name: 'RelizaHub Build And Submit Release metadata action'
+description: 'RelizaHub Build And Submit Release metadata action'
 inputs:
   registry_username:
     description: "Username for image registry"
