@@ -58,7 +58,7 @@ runs:
         else
           meta=${{inputs.ci_metadata}}
         fi
-        reliza_ver=$(docker run --rm relizaio/reliza-cli getversion -k ${{ inputs.reliza_api_key }} -i ${{ inputs.reliza_api_id }} -u ${{ inputs.reliza_api_url }} -b ${{github.ref_name}} --metadata $meta)
+        reliza_ver=$(docker run --rm registry.relizahub.com/library/reliza-cli getversion -k ${{ inputs.reliza_api_key }} -i ${{ inputs.reliza_api_id }} -u ${{ inputs.reliza_api_url }} -b ${{github.ref_name}} --metadata $meta)
         echo "completed getting ver"
         echo $reliza_ver
         echo "RLZ_VER_JSON=$reliza_ver" >> $GITHUB_ENV
@@ -88,7 +88,7 @@ runs:
     - name: Extract Last Release Commit And Prepare List Of Commits
       shell: bash
       run: |
-        last_commit=$(docker run --rm relizaio/reliza-cli getlatestrelease -i ${{ inputs.reliza_api_id }} -k ${{ inputs.reliza_api_key }} -u ${{ inputs.reliza_api_url }} --branch ${{github.ref_name}} | jq -r ".sourceCodeEntryDetails.commit")
+        last_commit=$(docker run --rm registry.relizahub.com/library/reliza-cli getlatestrelease -i ${{ inputs.reliza_api_id }} -k ${{ inputs.reliza_api_key }} -u ${{ inputs.reliza_api_url }} --branch ${{github.ref_name}} | jq -r ".sourceCodeEntryDetails.commit")
         if [ ! -z "$last_commit" ]
         then
           echo -n "--commits $(git log $last_commit..${{github.sha}} --date=iso-strict --pretty='%H|||%ad|||%s' | base64 -w 0) " >> reliza_command
@@ -115,7 +115,7 @@ runs:
         # debug
         cat reliza_command
         # send data
-        echo docker run --rm relizaio/reliza-cli addrelease $(cat reliza_command) > rlz_cmd_exec
+        echo docker run --rm registry.relizahub.com/library/reliza-cli addrelease $(cat reliza_command) > rlz_cmd_exec
         eval $(cat rlz_cmd_exec)
     - name: Fail build if reliza status is rejected
       shell: bash
