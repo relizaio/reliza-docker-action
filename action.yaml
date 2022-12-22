@@ -25,6 +25,9 @@ inputs:
   reliza_api_url:
     description: "Reliza Hub API URL"
     required: true
+  ci_metadata:
+    description: "Metadata for CI run, (Optional - default is GitHub)"
+    required: false
 runs:
   using: "composite"
   steps:
@@ -36,8 +39,6 @@ runs:
       with:
         fetch-depth: 200
     - name: Docker Setup Buildx
-      # You may pin to the exact commit or the version.
-      # uses: docker/setup-buildx-action@8c0edbc76e98fa90f69d9a2c020dcb50019dc325
       uses: docker/setup-buildx-action@v2.2.1
     - name: Login to Docker Registry
       uses: docker/login-action@v2.1.0
@@ -48,7 +49,8 @@ runs:
     - name: Get Version
       shell: bash
       run: |
-        reliza_ver=$(docker run --rm relizaio/reliza-cli getversion -k ${{ inputs.reliza_api_key }} -i ${{ inputs.reliza_api_id }} -u ${{ inputs.reliza_api_url }} -b ${{github.ref_name}} --metadata GitHub)
+        meta=$(${{inputs.ci_metadata}} || GitHub)
+        reliza_ver=$(docker run --rm relizaio/reliza-cli getversion -k ${{ inputs.reliza_api_key }} -i ${{ inputs.reliza_api_id }} -u ${{ inputs.reliza_api_url }} -b ${{github.ref_name}} --metadata $meta)
         echo "completed getting ver"
         echo $reliza_ver
         echo "RLZ_VER_JSON=$reliza_ver" >> $GITHUB_ENV
