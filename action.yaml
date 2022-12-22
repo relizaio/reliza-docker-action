@@ -1,5 +1,8 @@
 name: 'RelizaHub Build And Submit Release metadata action'
 description: 'RelizaHub Build And Submit Release metadata action'
+branding:
+  icon: 'anchor'
+  color: 'green'
 inputs:
   registry_username:
     description: "Username for image registry"
