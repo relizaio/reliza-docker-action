@@ -36,8 +36,8 @@ runs:
   using: "composite"
   steps:
     - id: setup-reliza-cli
-        name: setup-reliza-cli
-        uses: relizaio/setup-reliza-cli@master
+      name: setup-reliza-cli
+      uses: relizaio/setup-reliza-cli@master
     - name: Docker Setup Buildx
       uses: docker/setup-buildx-action@v2.2.1
     - name: Login to DockerHub
