@@ -28,7 +28,8 @@ inputs:
     required: true
   reliza_api_url:
     description: "Reliza Hub API URL"
-    required: true
+    required: false
+    default: 'https://app.relizahub.com'
   ci_metadata:
     description: "Metadata for CI run, (Optional - default is GitHub)"
     required: false
