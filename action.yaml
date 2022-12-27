@@ -76,12 +76,11 @@ runs:
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
       continue-on-error: true
       run: |
-        set -x
         cd ${{ inputs.path }}
         
         branch_name=${{github.ref_name}}
         case $branch_name in
-        
+
           master | main)
             latest_tag=latest
             ;;
@@ -90,9 +89,8 @@ runs:
             latest_tag=$branch_name
             ;;
         esac
-        echo "Latest Tag: $latest_tag"
 
-        docter build \
+        docker build \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
