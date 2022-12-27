@@ -80,10 +80,8 @@ runs:
         cd ${{ inputs.path }}
         latest_tag=latest
         branch_name=${{github.ref_name}}
-        if [[$branch_name != "master" ]] || [[$branch_name != "main"]] ;
-        then
-          latest_tag=$branch_name
-        fi
+        "$(if [[ $branch_name != master $branch_name != main]]; then latest_tag=$branch_name; fi)"
+      
         #debug latest tag
         echo "Latest Tag: $latest_tag"
 
