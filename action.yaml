@@ -79,9 +79,10 @@ runs:
         set -x
         cd ${{ inputs.path }}
         latest_tag=latest
-        if ["${{github.ref_name}}" != "master" ] || ["${{github.ref_name}}" != "main"];
+        branch_name=${{github.ref_name}}
+        if ["$branch_name" != "master" ] || ["$branch_name" != "main"]
         then
-          latest_tag=${{github.ref_name}}
+          latest_tag=$branch_name
         fi
         #debug latest tag
         echo "Latest Tag: $latest_tag"
