@@ -87,7 +87,7 @@ runs:
         esac
         echo "Latest Tag: $latest_tag"
 
-        docker build \
+        docter build \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
