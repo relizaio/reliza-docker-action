@@ -78,12 +78,17 @@ runs:
       run: |
         set -x
         cd ${{ inputs.path }}
-        latest_tag=latest
+        
         branch_name=${{github.ref_name}}
         case $branch_name in
+        
           master | main)
-          latest_tag=$branch_name
-          ;;
+            latest_tag=latest
+            ;;
+
+          *)
+            latest_tag=$branch_name
+            ;;
         esac
         echo "Latest Tag: $latest_tag"
 
