@@ -77,16 +77,22 @@ runs:
       continue-on-error: true
       run: |
         cd ${{ inputs.path }}
+        latest_tag=latest
+        if [${{github.ref_name}} != "master"] || [${{github.ref_name}} != "main"]
+        then
+          latest_tag=${{github.ref_name}}
+        fi
+        
         docker build \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
-          -t ${{inputs.image_namespace}}/${{inputs.image_name}}:latest \
+          -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
           --build-arg CI_ENV=github${{github.sha}} \
           --build-arg GIT_COMMIT=${{github.sha}} \
           --build-arg GIT_BRANCH=${{github.ref_name}} .
         docker_sha_256=$(docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} | grep sha256 | cut -f 3 -d ' ')
-        # push latest also
-        docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:latest
+        # push latest_tag also
+        docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
         # save sha256 to env var
         echo "DOCKER_SHA_256=$docker_sha_256" >> $GITHUB_ENV
         echo "RELIZA_BUILD_STATUS=complete " >> $GITHUB_ENV
