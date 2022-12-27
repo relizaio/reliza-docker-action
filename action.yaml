@@ -76,13 +76,16 @@ runs:
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
       continue-on-error: true
       run: |
+        set -x
         cd ${{ inputs.path }}
         latest_tag=latest
-        if [${{github.ref_name}} != "master"] || [${{github.ref_name}} != "main"]
+        if [[${{github.ref_name}} != "master"]] || [[${{github.ref_name}} != "main"]]
         then
           latest_tag=${{github.ref_name}}
         fi
-        
+        #debug latest tag
+        echo "Latest Tag: $latest_tag"
+
         docker build \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
