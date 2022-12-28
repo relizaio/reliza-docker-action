@@ -46,7 +46,7 @@ runs:
   steps:
     - id: setup-reliza-cli
       name: setup-reliza-cli
-      uses: relizaio/setup-reliza-cli@master
+      uses: relizaio/setup-reliza-cli@1.0
     - name: Docker Setup Buildx
       uses: docker/setup-buildx-action@v2.2.1
     - name: Login to DockerHub
@@ -64,7 +64,7 @@ runs:
         password: ${{inputs.registry_password}}
     - id: get-version
       name: Get Version
-      uses: relizaio/reliza-get-version@master
+      uses: relizaio/reliza-get-version@1.0
       with: 
         reliza_api_id: ${{ inputs.reliza_api_id }}
         reliza_api_key: ${{ inputs.reliza_api_key }}
@@ -109,7 +109,7 @@ runs:
         echo "DOCKER_SHA_256=$docker_sha_256" >> $GITHUB_ENV
         echo "RELIZA_BUILD_STATUS=complete " >> $GITHUB_ENV
     - name: Submit metadata to Reliza Hub
-      uses: relizaio/reliza-add-release@master
+      uses: relizaio/reliza-add-release@1.0
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
       with:
         reliza_api_id: ${{ inputs.reliza_api_id }}
