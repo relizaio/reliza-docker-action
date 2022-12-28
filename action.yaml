@@ -101,7 +101,7 @@ runs:
           --build-arg CI_ENV=github${{github.sha}} \
           --build-arg GIT_COMMIT=${{github.sha}} \
           --build-arg GIT_BRANCH=${{github.ref_name}} \
-          -f {{inputs.dockerfile_name}} .
+          -f ${{inputs.dockerfile_name}} .
         docker_sha_256=$(docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} | grep sha256 | cut -f 3 -d ' ')
         # push latest_tag also
         docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
