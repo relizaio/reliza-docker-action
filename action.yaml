@@ -41,6 +41,9 @@ inputs:
   ci_metadata:
     description: "Metadata for CI run, (Optional - default is GitHub)"
     required: false
+  reliza_project_id:
+    description: "Project UUID for this release if org-wide key is used"
+    required: false
 runs:
   using: "composite"
   steps:
@@ -64,13 +67,14 @@ runs:
         password: ${{inputs.registry_password}}
     - id: get-version
       name: Get Version
-      uses: relizaio/reliza-get-version@1.1
+      uses: relizaio/reliza-get-version@1.2
       with: 
         reliza_api_id: ${{ inputs.reliza_api_id }}
         reliza_api_key: ${{ inputs.reliza_api_key }}
         reliza_api_url: ${{inputs.reliza_api_url}}
         path: ${{inputs.path}}
         ci_metadata: "${{inputs.ci_metadata}}"
+        reliza_project_id: ${{inputs.reliza_project_id}}
     - name: Instantiate Reliza status as Rejected to handle possible build failure
       shell: bash
       run: |
@@ -110,7 +114,7 @@ runs:
         echo "DOCKER_SHA_256=$docker_sha_256" >> $GITHUB_ENV
         echo "RELIZA_BUILD_STATUS=complete " >> $GITHUB_ENV
     - name: Submit metadata to Reliza Hub
-      uses: relizaio/reliza-add-release@1.0
+      uses: relizaio/reliza-add-release@1.1
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
       with:
         reliza_api_id: ${{ inputs.reliza_api_id }}
@@ -121,3 +125,4 @@ runs:
         reliza_full_version: ${{ steps.get-version.outputs.reliza_full_version }}
         reliza_build_start: ${{ steps.get-version.outputs.reliza_build_start }}
         reliza_build_status: $RELIZA_BUILD_STATUS
+        reliza_project_id: ${{inputs.reliza_project_id}}
