@@ -8,7 +8,7 @@ GitHub Action to Build a Docker image, push it to the registry and submit the re
 
 ```yaml
 steps:
-- uses: relizaio/reliza-docker-action@1.2
+- uses: relizaio/reliza-docker-action@1.3
   with:
     reliza_api_id: <api-id-obtained-from-relizahub>
     reliza_api_key: <api-key-obtained-from-relizahub>
