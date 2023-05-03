@@ -113,9 +113,8 @@ runs:
           -f ${{inputs.dockerfile_name}} .
         docker_sha_256=$(docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} | grep sha256 | cut -f 3 -d ' ')
         
-        if [ "${{inputs.image_name}}" == "true" ]
+        if [ "${{inputs.push_latest_tag}}" == "true" ]
         then
-          # push latest_tag also
           docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
         fi
 
