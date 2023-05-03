@@ -44,6 +44,10 @@ inputs:
   reliza_project_id:
     description: "Project UUID for this release if org-wide key is used"
     required: false
+  push_latest_tag:
+    description: "set to false if you do not want image tagged latest to be pushed"
+    required: false
+    default: 'true'
 runs:
   using: "composite"
   steps:
@@ -108,8 +112,12 @@ runs:
           --build-arg GIT_BRANCH=${{github.ref_name}} \
           -f ${{inputs.dockerfile_name}} .
         docker_sha_256=$(docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} | grep sha256 | cut -f 3 -d ' ')
-        # push latest_tag also
-        docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
+        
+        if [ "${{inputs.image_name}}" == "true" ]
+        then
+          # push latest_tag also
+          docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
+        fi
 
         # push branch tag for main or master
         if [ "$latest_tag" != "$branch_name" ]
