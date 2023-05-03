@@ -32,4 +32,5 @@ The actions supports the following inputs:
 - `path`: Path to the relative to root of the repo (default is '.').
 - `dockerfile_name`: Name of the dockerfile (default is 'Dockerfile').
 - `reliza_project_id`: Project UUID if an org-wide key is used.
+- `push_latest_tag`: Whether to push image with 'latest' tag also, optional, default: true
 
