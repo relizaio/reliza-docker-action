@@ -107,7 +107,7 @@ runs:
             ;;
         esac
 
-        docker build \
+        docker \
           buildx build --platform linux/arm64/v8,linux/amd64 \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
