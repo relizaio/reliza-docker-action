@@ -108,7 +108,7 @@ runs:
         esac
 
         docker_sha_256=$(docker \
-          buildx build --platform linux/arm64/v8,linux/amd64 \
+          buildx build --push --platform linux/arm64/v8,linux/amd64 \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
