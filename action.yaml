@@ -107,7 +107,7 @@ runs:
             ;;
         esac
 
-        docker_sha_256=$(docker \
+        build_push_output=$(docker \
           buildx build --push --platform linux/arm64/v8,linux/amd64 \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
           -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
@@ -115,9 +115,11 @@ runs:
           --build-arg CI_ENV=github${{github.sha}} \
           --build-arg GIT_COMMIT=${{github.sha}} \
           --build-arg GIT_BRANCH=${{github.ref_name}} \
-          -f ${{inputs.dockerfile_name}} . \
-          | grep sha256 | cut -f 3 -d ' ')
-        
+          -f ${{inputs.dockerfile_name}} . )
+          
+        echo $build_push_output
+
+        docker_sha_256=$(echo $build_push_output | grep sha256 | cut -f 3 -d ' ')
         if [ "${{inputs.push_latest_tag}}" == "true" ]
         then
           docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
