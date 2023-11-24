@@ -107,31 +107,35 @@ runs:
             ;;
         esac
 
-        build_push_output=$(docker \
+        tags="-t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }}"
+
+        if [ "${{inputs.push_latest_tag}}" == "true" ]
+        then
+          tags+=" -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag"
+        fi
+
+        # push branch tag for main or master
+        if [ "$latest_tag" != "$branch_name" ]
+        then
+          tags+=" -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name"
+        fi
+
+        docker \
           buildx build --push --platform linux/arm64,linux/amd64 \
-          -t ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} \
-          -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag \
+          $tags \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
           --build-arg CI_ENV=github${{github.sha}} \
           --build-arg GIT_COMMIT=${{github.sha}} \
           --build-arg GIT_BRANCH=${{github.ref_name}} \
-          -f ${{inputs.dockerfile_name}} . )
+          -f ${{inputs.dockerfile_name}} .
           
-        echo $build_push_output
-        buildx_inspect=$(docker buildx imagetools inspect ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag)
-        echo $buildx_inspect
-        # docker_sha_256=$(echo $build_push_output | grep sha256 | cut -f 3 -d ' ')
-        # if [ "${{inputs.push_latest_tag}}" == "true" ]
-        # then
-        #   docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
-        # fi
+        
+        # buildx_inspect=$(docker buildx imagetools inspect ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag)
+        # echo $buildx_inspect
+        docker_sha_256=$(docker buildx imagetools inspect --format "{{json .Manifest}}" ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} | jq -r '.digest')
+       
 
-        # # push branch tag for main or master
-        # if [ "$latest_tag" != "$branch_name" ]
-        # then
-        #   docker tag ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name
-        #   docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name
-        # fi
+        
         
         # save sha256 to env var
         echo "DOCKER_SHA_256=$docker_sha_256" >> $GITHUB_ENV
