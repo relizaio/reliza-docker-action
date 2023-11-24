@@ -118,19 +118,20 @@ runs:
           -f ${{inputs.dockerfile_name}} . )
           
         echo $build_push_output
+        buildx_inspect=$(docker buildx imagetools inspect ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag)
+        echo $buildx_inspect
+        # docker_sha_256=$(echo $build_push_output | grep sha256 | cut -f 3 -d ' ')
+        # if [ "${{inputs.push_latest_tag}}" == "true" ]
+        # then
+        #   docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
+        # fi
 
-        docker_sha_256=$(echo $build_push_output | grep sha256 | cut -f 3 -d ' ')
-        if [ "${{inputs.push_latest_tag}}" == "true" ]
-        then
-          docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag
-        fi
-
-        # push branch tag for main or master
-        if [ "$latest_tag" != "$branch_name" ]
-        then
-          docker tag ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name
-          docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name
-        fi
+        # # push branch tag for main or master
+        # if [ "$latest_tag" != "$branch_name" ]
+        # then
+        #   docker tag ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name
+        #   docker push ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name
+        # fi
         
         # save sha256 to env var
         echo "DOCKER_SHA_256=$docker_sha_256" >> $GITHUB_ENV
