@@ -97,7 +97,7 @@ runs:
       run: |
         set -x
         supported_platforms=('linux/amd64' 'linux/arm64' 'linux/s390x' 'linux/arm/v7' 'linux/arm/v6')
-        input_list=$(echo '${{ inputs.platform_architectures }}' | tr ',' '\n')
+        input_list=($(echo '${{ inputs.platform_architectures }}' | tr ',' '\n'))
         if [[ -z "$input_list" ]]; then
           echo "Platform architectures list is empty"
           exit 1
