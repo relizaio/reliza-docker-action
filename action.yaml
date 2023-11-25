@@ -102,11 +102,19 @@ runs:
           echo "Platform architectures list is empty"
           exit 1
         fi
+        # Check if each element of the input list exists in the enum list
         for element in "${input_list[@]}"; do
-          if [[ ! " ${supported_platforms[@]} " =~ " ${element} " ]]; then
-            echo "$element is not a supported platform"
-            exit 1
+        found=0
+        for platform in "${supported_platforms[@]}"; do
+          if [[ $platform == $element ]]; then
+            found=1
+            break
           fi
+        done
+        if [ $found -eq 0 ]; then
+          echo "$element is not a supported platform"
+          exit 1
+        fi
         done
     - name: Build and push docker container to Reliza Hub Registry
       shell: bash
