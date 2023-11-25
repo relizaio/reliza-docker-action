@@ -48,6 +48,10 @@ inputs:
     description: "set to false if you do not want image tagged latest to be pushed"
     required: false
     default: 'true'
+  platform_architectures:
+    description: "comma separated list of platform architectures you want to build the image for, default is linux/amd64"
+    required: false
+    default: 'linux/amd64'
 runs:
   using: "composite"
   steps:
@@ -88,6 +92,21 @@ runs:
       run: |
         echo "RELIZA_BUILD_STATUS=rejected" >> $GITHUB_ENV
         echo "RELIZA_DO_BUILD=${{ steps.get-version.outputs.reliza_do_build}}" >> $GITHUB_ENV
+    - name: Validate input list
+      shell: bash
+      run: |
+        supported_platforms=('linux/amd64 linux/arm64 linux/s390x linux/arm/v7 linux/arm/v6')
+        input_list=$(echo '${{ inputs.platform_architectures }}' | tr ',' '\n')
+        if [[ -z "$input_list" ]]; then
+          echo "Platform architectures list is empty"
+          exit 1
+        fi
+        for element in "${input_list[@]}"; do
+          if [[ ! " ${supported_platforms[@]} " =~ " ${element} " ]]; then
+            echo "$element is not a supported platform"
+            exit 1
+          fi
+        done
     - name: Build and push docker container to Reliza Hub Registry
       shell: bash
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
@@ -119,9 +138,9 @@ runs:
         then
           tags+=" -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name"
         fi
-
+        echo "Building for platforms: ${{ inputs.platform_architectures }}"
         docker \
-          buildx build --push --platform linux/arm64,linux/amd64 \
+          buildx build --push --platform ${{ inputs.platform_architectures }} \
           $tags \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
           --build-arg CI_ENV=github${{github.sha}} \
