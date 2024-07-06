@@ -181,3 +181,7 @@ runs:
         reliza_build_status: $RELIZA_BUILD_STATUS
         reliza_project_id: ${{inputs.reliza_project_id}}
         enable_sbom: 'true'
+      env:
+        DOCKER_USER: ${{inputs.registry_username}}
+        DOCKER_PASSWORD: ${{inputs.registry_password}}
+        DOCKER_HOST: ${{inputs.registry_host}}
