@@ -184,4 +184,3 @@ runs:
       env:
         DOCKER_USER: ${{inputs.registry_username}}
         DOCKER_PASSWORD: ${{inputs.registry_password}}
-        DOCKER_HOST: ${{inputs.registry_host}}
