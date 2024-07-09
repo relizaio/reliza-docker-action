@@ -184,6 +184,4 @@ runs:
         registry_username: ${{inputs.registry_username}}
         registry_password: ${{inputs.registry_password}}
         registry_host: ${{inputs.registry_host}}
-      env:
-        DOCKER_USER: ${{inputs.registry_username}}
-        DOCKER_PASSWORD: ${{inputs.registry_password}}
+        path: ${{inputs.path}}
