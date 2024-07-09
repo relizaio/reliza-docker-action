@@ -52,6 +52,10 @@ inputs:
     description: "comma separated list of platform architectures you want to build the image for, default is linux/amd64"
     required: false
     default: 'linux/amd64'
+  enable_sbom:
+    required: false
+    default: 'false'
+    description: Generates SBOM and stores it along with the artifact
 runs:
   using: "composite"
   steps:
@@ -180,7 +184,7 @@ runs:
         reliza_build_start: ${{ steps.get-version.outputs.reliza_build_start }}
         reliza_build_status: $RELIZA_BUILD_STATUS
         reliza_project_id: ${{inputs.reliza_project_id}}
-        enable_sbom: 'true'
+        enable_sbom: ${{inputs.enable_sbom}}
         registry_username: ${{inputs.registry_username}}
         registry_password: ${{inputs.registry_password}}
         registry_host: ${{inputs.registry_host}}
