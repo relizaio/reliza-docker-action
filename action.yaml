@@ -212,7 +212,12 @@ runs:
         registry_password: ${{inputs.registry_password}}
         registry_host: ${{inputs.registry_host}}
         path: ${{inputs.path}}
-        
+    - id: setup-rearm
+      name: setup-rearm
+      uses: relizaio/setup-rearm-cli-action@main
+      if: ${{inputs.push_to_rearm == 'true'}}
+      with:
+        version: 25.04.2
     - name: Submit metadata to Rearm Hub
       uses: relizaio/rearm-add-release@main
       if: ${{inputs.push_to_rearm == 'true'}}
