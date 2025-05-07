@@ -215,12 +215,12 @@ runs:
     - id: setup-rearm
       name: setup-rearm
       uses: relizaio/setup-rearm-cli-action@main
-      if: ${{inputs.push_to_rearm == 'true'}}
+      if: ${{inputs.push_to_rearm == 'true'}} && ${{env.RELIZA_DO_BUILD == 'true'}}
       with:
         version: 25.04.2
     - name: Submit metadata to Rearm Hub
       uses: relizaio/rearm-add-release@main
-      if: ${{inputs.push_to_rearm == 'true'}}
+      if: ${{inputs.push_to_rearm == 'true'}} && ${{env.RELIZA_DO_BUILD == 'true'}}
       with:
         rearm_api_id: ${{ inputs.rearm_api_id }}
         rearm_api_key: ${{ inputs.rearm_api_key }}
