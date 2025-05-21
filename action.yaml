@@ -61,13 +61,13 @@ inputs:
     required: false
     default: 'false'
   rearm_api_id:
-    description: "Reliza Hub API ID"
+    description: "ReARM API ID"
     required: false
   rearm_api_key:
-    description: "Reliza Hub API KEY"
+    description: "ReARM API KEY"
     required: false
   rearm_api_url:
-    description: "Reliza Hub API URL"
+    description: "ReARM API URL"
     required: false
     default: 'https://demo.rearmhq.com'
   rearm_component_id:
