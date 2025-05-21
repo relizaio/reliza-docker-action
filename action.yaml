@@ -218,7 +218,7 @@ runs:
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
         version: 25.04.2
-    - name: Submit metadata to Rearm Hub
+    - name: Submit metadata to ReARM
       uses: relizaio/rearm-add-release@main
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
