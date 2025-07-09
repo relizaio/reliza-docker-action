@@ -221,7 +221,7 @@ runs:
       uses: relizaio/setup-rearm-cli-action@4cf6087e5ba79bcd1be9ffffcda853fbf2207ad6 # v1.0.0
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
-        version: 25.06.1
+        version: 25.07.1
     - name: Submit metadata to ReARM
       uses: relizaio/rearm-add-release@07e1ed5a253548ce54fe5fb7e146e1a46c5f9360 # v1.1.0
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
