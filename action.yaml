@@ -248,6 +248,7 @@ runs:
         enable_public_cosign_sigstore: ${{inputs.rearm_enable_public_cosign_sigstore}}
         finalize_release: "true"
     - name: Fail if build is rejected
+      shell: bash
       run: |
         if [ "${env.RELIZA_BUILD_STATUS}" = "rejected" ]; then
           echo "Build is rejected. Exiting with error."
