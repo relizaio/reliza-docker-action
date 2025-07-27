@@ -201,7 +201,7 @@ runs:
     - name: Submit metadata to Reliza Hub
       uses: relizaio/reliza-add-release@3e9329b4ee80dd0b4cd7f08a1277bf4465da3539 # v1.3
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
-      continue-on-error: ${{inputs.push_to_rearm == 'true'}}
+      continue-on-error: true
       with:
         reliza_api_id: ${{ inputs.reliza_api_id }}
         reliza_api_key: ${{ inputs.reliza_api_key }}
@@ -226,6 +226,7 @@ runs:
     - name: Submit metadata to ReARM
       uses: relizaio/rearm-add-release@2f1221baf008a7061c9dd604269ce22f29cb5c7b # v1.1.1
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
+      continue-on-error: true
       with:
         rearm_api_id: ${{ inputs.rearm_api_id }}
         rearm_api_key: ${{ inputs.rearm_api_key }}
@@ -246,3 +247,11 @@ runs:
         path: ${{inputs.path}}
         enable_public_cosign_sigstore: ${{inputs.rearm_enable_public_cosign_sigstore}}
         finalize_release: "true"
+    - name: Fail if build is rejected
+      run: |
+        if [ "${env.RELIZA_BUILD_STATUS}" = "rejected" ]; then
+          echo "Build is rejected. Exiting with error."
+          exit 1
+        else
+          echo "Build passed."
+        fi
