@@ -201,6 +201,7 @@ runs:
     - name: Submit metadata to Reliza Hub
       uses: relizaio/reliza-add-release@3e9329b4ee80dd0b4cd7f08a1277bf4465da3539 # v1.3
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
+      continue-on-error: ${{inputs.push_to_rearm == 'true'}}
       with:
         reliza_api_id: ${{ inputs.reliza_api_id }}
         reliza_api_key: ${{ inputs.reliza_api_key }}
