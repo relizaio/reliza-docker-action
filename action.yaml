@@ -231,7 +231,7 @@ runs:
       with:
         version: 25.08.4
     - name: Submit metadata to ReARM
-      uses: relizaio/rearm-add-release@0e40cc0054079099f8928fd5d2e5c86682be1353 # codeql experimental
+      uses: relizaio/rearm-add-release@90947c9b8ad33497e11988926b599b4736b0c193 # codeql experimental
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
         rearm_api_id: ${{ inputs.rearm_api_id }}
