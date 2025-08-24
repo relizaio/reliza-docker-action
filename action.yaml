@@ -89,6 +89,10 @@ inputs:
     required: false
     default: 'none'
     description: "Language to analyze with CodeQL"
+  rearm_codeql_queries:
+    required: false
+    default: 'security-only'
+    description: "CodeQL Queries Type (security-only | security-and-quality | security-extended | default | all) and some language specific options, see CodeQL documentation"
 runs:
   using: "composite"
   steps:
@@ -231,7 +235,7 @@ runs:
       with:
         version: 25.08.4
     - name: Submit metadata to ReARM
-      uses: relizaio/rearm-add-release@59c3575731fca9bef07730f6e9599b28da9ec199 # codeql experimental
+      uses: relizaio/rearm-add-release@a6076f4097d76b3c469d0ec0f1955aacd6d3a0f1 # codeql experimental
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
         rearm_api_id: ${{ inputs.rearm_api_id }}
@@ -254,4 +258,5 @@ runs:
         enable_public_cosign_sigstore: ${{inputs.rearm_enable_public_cosign_sigstore}}
         enable_codeql: ${{inputs.rearm_enable_codeql}}
         codeql_language: ${{inputs.rearm_codeql_language}}
+        codeql_queries: ${{inputs.rearm_codeql_queries}}
         finalize_release: "true"
