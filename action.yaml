@@ -94,7 +94,7 @@ runs:
   steps:
     - id: setup-reliza-cli
       name: setup-reliza-cli
-      uses: relizaio/setup-reliza-cli@4dcc898ec048f20a5809da24259f744408083573 # v2.1
+      uses: relizaio/setup-reliza-cli@e3c10ce6e95db19d8bb8560a77af2d8e942c4c08 # v2.2
       with: 
         version: 2024.07.6
     - name: Set up QEMU
@@ -116,7 +116,7 @@ runs:
         password: ${{inputs.registry_password}}
     - id: get-version
       name: Get Version
-      uses: relizaio/reliza-get-version@4517cde0dbb5b340f560a7e370f7d85923529915 # v1.8
+      uses: relizaio/reliza-get-version@ca75e17593a350c664b4ae5e9c944656075b9be8 # v1.9
       with: 
         reliza_api_id: ${{ inputs.reliza_api_id }}
         reliza_api_key: ${{ inputs.reliza_api_key }}
@@ -127,6 +127,7 @@ runs:
     - name: Instantiate Reliza status as Rejected to handle possible build failure
       shell: bash
       run: |
+        mkdir -p /tmp/reliza
         echo "RELIZA_BUILD_STATUS=rejected" >> $GITHUB_ENV
         echo "REARM_BUILD_STATUS=rejected" >> $GITHUB_ENV
         echo "RELIZA_DO_BUILD=${{ steps.get-version.outputs.reliza_do_build}}" >> $GITHUB_ENV
@@ -198,16 +199,13 @@ runs:
         # buildx_inspect=$(docker buildx imagetools inspect ${{inputs.image_namespace}}/${{inputs.image_name}}:$latest_tag)
         # echo $buildx_inspect
         docker_sha_256=$(docker buildx imagetools inspect --format "{{json .Manifest}}" ${{inputs.image_namespace}}/${{inputs.image_name}}:${{ steps.get-version.outputs.reliza_short_version }} | jq -r '.digest')
-       
-
-        
         
         # save sha256 to env var
         echo "DOCKER_SHA_256=$docker_sha_256" >> $GITHUB_ENV
         echo "RELIZA_BUILD_STATUS=complete " >> $GITHUB_ENV
         echo "REARM_BUILD_STATUS=ASSEMBLED" >> $GITHUB_ENV
     - name: Submit metadata to Reliza Hub
-      uses: relizaio/reliza-add-release@3e9329b4ee80dd0b4cd7f08a1277bf4465da3539 # v1.3
+      uses: relizaio/reliza-add-release@8b4d054edb2ec1ed0706ecee628d38625fc9219f # v1.4
       if: ${{env.RELIZA_DO_BUILD == 'true'}}
       with:
         reliza_api_id: ${{ inputs.reliza_api_id }}
@@ -226,12 +224,12 @@ runs:
         path: ${{inputs.path}}
     - id: setup-rearm
       name: setup-rearm
-      uses: relizaio/setup-rearm-cli-action@4cf6087e5ba79bcd1be9ffffcda853fbf2207ad6 # v1.0.0
+      uses: relizaio/setup-rearm-cli-action@c2a544105e7f1572057cbe437fae410d585a240b # v1.1.0
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
-        version: 25.08.6
+        version: 25.10.2
     - name: Submit metadata to ReARM
-      uses: relizaio/rearm-add-release@aad5814a7d6a4fe3c85ddc300d525b7432de866a # v1.3.5
+      uses: relizaio/rearm-add-release@65a54227a1f06aea0d8e95903fbfae5a5bb129d6 # v1.4.0
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with:
         rearm_api_id: ${{ inputs.rearm_api_id }}
@@ -255,3 +253,7 @@ runs:
         enable_codeql: ${{inputs.rearm_enable_codeql}}
         codeql_language: ${{inputs.rearm_codeql_language}}
         finalize_release: "true"
+post:
+  shell: bash
+  run: |
+    rm -rf /tmp/reliza/*
