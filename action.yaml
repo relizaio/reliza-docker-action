@@ -134,7 +134,7 @@ runs:
     - name: Validate input list
       shell: bash
       run: |
-        supported_platforms=('linux/amd64' 'linux/arm64' 'linux/s390x' 'linux/arm/v7' 'linux/arm/v6', 'windows/amd64')
+        supported_platforms=('linux/amd64' 'linux/arm64' 'linux/s390x' 'linux/arm/v7' 'linux/arm/v6')
         input_list=($(echo '${{ inputs.platform_architectures }}' | tr ',' '\n'))
         if [[ -z "$input_list" ]]; then
           echo "Platform architectures list is empty"
