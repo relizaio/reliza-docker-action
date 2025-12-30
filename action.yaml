@@ -224,11 +224,11 @@ runs:
         path: ${{inputs.path}}
     - id: setup-rearm
       name: setup-rearm
-      uses: relizaio/rearm-actions/setup-cli@09835a54cb9a1f3deed4f844c09eb1336fe29573 # v1.0.0
+      uses: relizaio/rearm-actions/setup-cli@3ea3e74037608bf7642f50406961753229e315ef # v1.0.0
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
     - id: init_rearm
       name: Initialize ReARM Flow
-      uses: relizaio/rearm-actions/initialize@09835a54cb9a1f3deed4f844c09eb1336fe29573 # v1.0.0
+      uses: relizaio/rearm-actions/initialize@3ea3e74037608bf7642f50406961753229e315ef # v1.0.0
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       with: 
         rearm_api_id: ${{ inputs.rearm_api_id }}
@@ -240,7 +240,7 @@ runs:
     - name: Generate and sign SBOMs
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
       id: sbom
-      uses: relizaio/rearm-actions/sbom-sign-scan@09835a54cb9a1f3deed4f844c09eb1336fe29573 # v1.0.0
+      uses: relizaio/rearm-actions/sbom-sign-scan@3ea3e74037608bf7642f50406961753229e315ef # v1.0.0
       with:
         image_full_name: ${{inputs.image_namespace}}/${{inputs.image_name}}
         image_digest: $DOCKER_SHA_256
@@ -257,7 +257,7 @@ runs:
         codeql_language: ${{inputs.rearm_codeql_language}}
     - name: Submit metadata to ReARM and Finalize
       if: ${{inputs.push_to_rearm == 'true' && env.RELIZA_DO_BUILD == 'true'}}
-      uses: relizaio/rearm-actions/finalize@main
+      uses: relizaio/rearm-actions/finalize@3ea3e74037608bf7642f50406961753229e315ef # v1.0.0
       with:
         rearm_api_id: ${{ inputs.rearm_api_id }}
         rearm_api_key: ${{ inputs.rearm_api_key }}
