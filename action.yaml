@@ -48,6 +48,10 @@ inputs:
     description: "set to false if you do not want image tagged latest to be pushed"
     required: false
     default: 'true'
+  no_cache:
+    description: "Set to true to disable docker build cache"
+    required: false
+    default: 'false'
   platform_architectures:
     description: "comma separated list of platform architectures you want to build the image for, default is linux/amd64"
     required: false
@@ -181,13 +185,19 @@ runs:
         fi
 
         # push branch tag for main or master
+
+        no_cache_flag=""
+        if [ "${{inputs.no_cache}}" == "true" ]; then
+          no_cache_flag="--no-cache"
+        fi
+
         if [ "$latest_tag" != "$branch_name" ]
         then
           tags+=" -t ${{inputs.image_namespace}}/${{inputs.image_name}}:$branch_name"
         fi
         echo "Building for platforms: ${{ inputs.platform_architectures }}"
         docker \
-          buildx build --push --platform ${{ inputs.platform_architectures }} \
+          buildx build $no_cache_flag --push --platform ${{ inputs.platform_architectures }} \
           $tags \
           --build-arg VERSION=${{ steps.get-version.outputs.reliza_full_version }} \
           --build-arg CI_ENV=github${{github.sha}} \
